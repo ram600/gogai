@@ -30,6 +30,7 @@ public class Ai {
     protected int hp;
     protected int rivel_hp;
     protected Perceptron perceptron;
+    protected boolean teach = false;
 
     Ai(Board b){
         board = b;
@@ -39,6 +40,7 @@ public class Ai {
     
 
        public void init(){
+            perceptron = new Perceptron(10, 9*12);
             teachANN();
             setHp();
         }
@@ -131,17 +133,27 @@ public class Ai {
     }
 
 
-    protected void teachANN(){
+    private void teachANN(){
 
             String path = "/home/admin/digits";
-            perceptron = new Perceptron(10, 9*12);
             perceptron.loadState(path);
-           // Teacher t = new Teacher(perceptron);
-           // t.teach(path, 100);
-            //perceptron.saveState(path);
+            Teacher t = new Teacher(perceptron);
+            t.teach(path, 100);
+            perceptron.saveState(new File(".").getAbsolutePath());
             
 
      }
+    protected void loadMemory(){
+        if(!teach){
+            String path = new File(".").getAbsolutePath();
+            perceptron.loadState(path);
+            Teacher t = new Teacher(perceptron);
+            t.teach(path, 100);
+            perceptron.saveState(path);
+            teach = true;
+        }
+            
+    }
 
      private BufferedImage prepareHelthImage(BufferedImage b,RGBImageFilter frgb){
              ImageProducer ipro  = new FilteredImageSource(b.getSource(), frgb);

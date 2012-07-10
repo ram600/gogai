@@ -112,8 +112,7 @@ public class Perceptron {
                 for(int j = 0; j < w.length;j++){
                    fo.write(Integer.toString(w[j]));
                    fo.newLine();
-                  
-                    
+                     
                 }
                 fo.close();
             } catch (Exception e) {
@@ -131,14 +130,11 @@ public class Perceptron {
                 fo = new BufferedReader(new InputStreamReader(new FileInputStream(path+"/"+i+".txt")));
                 
                 for(int j = 0; j < neurons[i].w.length;j++){
-                    String line;
-                   do{
-                     line = fo.readLine();
-                     neurons[i].w[i] = Integer.valueOf(line).intValue();
-                   }while(line.length() > 0);
-                   
-
-                }
+                       String line;
+                       line = fo.readLine();
+                       System.out.println(line+" -> "+i);
+                       neurons[i].w[j] = Integer.valueOf(line).intValue();
+                 }
                 fo.close();
             } catch (Exception e) {
             }
