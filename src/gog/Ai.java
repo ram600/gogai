@@ -41,7 +41,8 @@ public class Ai {
 
        public void init(){
             perceptron = new Perceptron(10, 9*12);
-            teachANN();
+            //teachANN();
+            loadMemory();
             setHp();
         }
 
@@ -118,9 +119,11 @@ public class Ai {
            int[] result5 = perceptron.recognize(vec5);
            int[] result6 = perceptron.recognize(vec6);
 
+           hp =Integer.valueOf(getDigit(result1)+""+getDigit(result2)+""+getDigit(result3)).intValue();
+           rivel_hp = Integer.valueOf(getDigit(result4)+""+getDigit(result5)+""+getDigit(result6)).intValue();
 
-           System.out.print(Integer.valueOf(getDigit(result1)+""+getDigit(result2)+""+getDigit(result3)).intValue());
-           
+           System.out.println(hp);
+           System.out.println(rivel_hp);
 
 
         } catch (AWTException e) {
@@ -133,23 +136,32 @@ public class Ai {
     }
 
 
+
+    public void makeStep(){
+
+        
+
+
+
+
+
+
+    }
+
+
     private void teachANN(){
 
             String path = "/home/admin/digits";
             perceptron.loadState(path);
             Teacher t = new Teacher(perceptron);
-            t.teach(path, 100);
-            perceptron.saveState(new File(".").getAbsolutePath());
+            t.teach(path, 150);
+            perceptron.saveState(new File(".").getAbsolutePath()+"/data/");
             
 
      }
     protected void loadMemory(){
         if(!teach){
-            String path = new File(".").getAbsolutePath();
-            perceptron.loadState(path);
-            Teacher t = new Teacher(perceptron);
-            t.teach(path, 100);
-            perceptron.saveState(path);
+            perceptron.loadState(new File(".").getAbsolutePath()+"/data/");
             teach = true;
         }
             

@@ -132,7 +132,7 @@ public class Perceptron {
                 for(int j = 0; j < neurons[i].w.length;j++){
                        String line;
                        line = fo.readLine();
-                       System.out.println(line+" -> "+i);
+                       //System.out.println(line+" -> "+i);
                        neurons[i].w[j] = Integer.valueOf(line).intValue();
                  }
                 fo.close();
