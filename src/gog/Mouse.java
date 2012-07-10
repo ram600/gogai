@@ -41,7 +41,7 @@ public class Mouse {
     public void simpleClick(int x,int y){
 
         robot.mouseMove(x,y); // Передвигаем мышь на координаты 100,100
-        robot.delay(20);
+        robot.delay(2000);
         robot.mousePress(InputEvent.BUTTON1_MASK); //Кликаем левой кнопкой мыши.
         robot.delay(10);
         robot.mouseRelease(InputEvent.BUTTON1_MASK);
@@ -57,8 +57,8 @@ public class Mouse {
                    
     }
 
-    public void clickBestStep(){
-        setStart();
+    public Point getBestStep(){
+        
         
         Point bestp = new Point();
         if(pc.best_max.max > 0){
@@ -73,36 +73,13 @@ public class Mouse {
         if(pc.best_tnt.tnt > 0){
             bestp = pc.best_tnt;
         }
-      
-        try {
-             simpleClick(bestp.cell.absolute_x, bestp.cell.absolute_y);
-             
-	     if(bestp.direct == Cell.UP){
-                delta_y = - Cell.HEIGHT;
-             }
-             if(bestp.direct == Cell.DOWN){
-                 delta_y =  Cell.HEIGHT;
-             }
-             if(bestp.direct == Cell.RIGHT){
-                 delta_x =  Cell.WIDTH;
-             }
-             if(bestp.direct == Cell.LEFT){
-                 delta_x =  -Cell.WIDTH;
-             }
-
-             simpleClick(bestp.cell.absolute_x+delta_x, bestp.cell.absolute_y+delta_y);
-             robot.mouseMove(startx,starty); // Передвигаем мышь на координаты 100,100
-
-        } catch (Exception e) {
-        }
+        return bestp;
     }
 
     
-    public void clickBestDamage(){
+    public Point getBestDamage(){
 
-     setStart();
-
-        Point bestp = new Point();
+            Point bestp = new Point();
         
             if(pc.best_max.min < 0){
              bestp = pc.best_max;
@@ -116,9 +93,31 @@ public class Mouse {
             if(pc.best_tnt.min < bestp.min){
                 bestp = pc.best_tnt;
             }
-       
+            return bestp;
+    }
 
+     public Point getBestHealth(){
+
+            Point bestp = new Point();
+
+            if(pc.best_max.max > 0){
+             bestp = pc.best_max;
+            }
+            if(pc.best_min.max > bestp.max){
+                bestp = pc.best_min;
+            }
+            if(pc.best_bomb.max > bestp.max){
+                bestp = pc.best_bomb;
+            }
+            if(pc.best_tnt.max > bestp.max){
+                bestp = pc.best_tnt;
+            }
+            return bestp;
+    }
+
+    public void baseStep(Point bestp){
         try {
+             setStart();
              simpleClick(bestp.cell.absolute_x, bestp.cell.absolute_y);
 
 	     if(bestp.direct == Cell.UP){
@@ -139,9 +138,8 @@ public class Mouse {
 
         } catch (Exception e) {
         }
-
-
     }
+    
 
     public void explosionBestBomb(){
          setStart();
@@ -160,10 +158,6 @@ public class Mouse {
         }
 
         try {
-             
-                 
-           
-
              simpleClick(board.ip.mouse_x+delta_x, board.ip.mouse_y+delta_y);
              simpleClick(bestp.cell.absolute_x, bestp.cell.absolute_y);
              robot.mouseMove(startx,starty); // Передвигаем мышь на координаты 100,100

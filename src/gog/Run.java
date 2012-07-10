@@ -168,7 +168,7 @@ class Run {
 
                             public void actionPerformed(ActionEvent ae) {
                                 //System.out.println(bg.getboardX());
-                                ip.setLftTopCorneCoords(bg.getboardX(),bg.getboardY());
+                                ip.setLftTopCorneCoords(bg.getboardX()+5,bg.getboardY()+4);
                                 ip.setLftTopHpCoords(bg.gethpX(), bg.gethpY());
                                 info.setText("Координаты заданы");
                                 ip.repaint();

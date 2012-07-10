@@ -55,12 +55,12 @@ public class Analyser2 {
 
       if(auto < 2){
           Mouse m = new Mouse(Va.points,this.board);
+          Ai ai = new Ai(board,m);
           if(!maxDamage){
-            m.clickBestStep();
-            Ai ai = new Ai(board);
-            
+            m.baseStep(m.getBestStep());
           }else{
-              m.clickBestDamage();
+              ai.makeStep();
+              //m.clickBestDamage();
           }
       }
       Va.points.clear();

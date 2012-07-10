@@ -31,9 +31,11 @@ public class Ai {
     protected int rivel_hp;
     protected Perceptron perceptron;
     protected boolean teach = false;
+    protected  Mouse mouse;
 
-    Ai(Board b){
+    Ai(Board b,Mouse m){
         board = b;
+        mouse = m;
         init();
     }
 
@@ -43,7 +45,7 @@ public class Ai {
             perceptron = new Perceptron(10, 9*12);
             //teachANN();
             loadMemory();
-            setHp();
+            
         }
 
 
@@ -138,13 +140,10 @@ public class Ai {
 
 
     public void makeStep(){
-
-        
-
-
-
-
-
+        setHp();
+//        if(hp > 0 && rivel_hp > 0){
+//
+//        }
 
     }
 
