@@ -32,11 +32,16 @@ public class Ai {
     protected Perceptron perceptron;
     protected boolean teach = false;
     protected  Mouse mouse;
+    protected Robot robot;
 
-    Ai(Board b,Mouse m){
+    Ai(Board b){
         board = b;
-        mouse = m;
         init();
+        try {
+          robot = new Robot();
+        } catch (AWTException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     
@@ -46,16 +51,17 @@ public class Ai {
             //teachANN();
             loadMemory();
             
+            
         }
 
 
     protected void setHp(){
 
-        try {
+       
 
-            Robot r = new Robot();
+            
             Rectangle screen = new Rectangle(board.ip.my_hp_x,board.ip.my_hp_y,400,12);
-            BufferedImage image = r.createScreenCapture(screen);
+            BufferedImage image = robot.createScreenCapture(screen);
 
             BufferedImage img1 = image.getSubimage(0,0, 24, 12);
             BufferedImage img2 = image.getSubimage(343,0, 24, 12);
@@ -127,10 +133,9 @@ public class Ai {
            System.out.println(hp);
            System.out.println(rivel_hp);
 
-
-        } catch (AWTException e) {
-            System.out.println(e.getMessage());
-        }
+           Run.lb_hp.setText(Integer.toString(hp));
+           Run.lb_rivel_hp.setText(Integer.toString(rivel_hp));
+       
 
 
 
@@ -141,10 +146,74 @@ public class Ai {
 
     public void makeStep(){
         setHp();
-//        if(hp > 0 && rivel_hp > 0){
-//
-//        }
 
+        BombAnalyse b = null;
+        if (bombExits()) {
+            b = new BombAnalyse(board);
+            b.analyse();
+            mouse = new Mouse(b.points, board);
+            mouse.delta_x = -60;
+            mouse.delta_y = 27;
+
+            Point p = new Point();
+            if (hp > 0 && rivel_hp > 0) {
+
+
+                mouse.baseBomb(getBestPoint());
+             }
+            BombAnalyse.points.clear();
+           }else{
+           
+              HorizontalAnalyse Ha = new HorizontalAnalyse(this.board);
+              VerticalAnalyse   Va = new VerticalAnalyse(this.board);
+
+              Ha.analyse();
+              Va.analyse();
+
+
+              mouse = new Mouse(VerticalAnalyse.points,this.board);
+              
+              mouse.baseStep(getBestPoint());
+              VerticalAnalyse.points.clear();
+           }
+
+
+
+
+        
+       
+
+    }
+
+
+    private Point getBestPoint(){
+        Point p = new Point();
+            if (hp > 0 && rivel_hp > 0) {
+
+                Point dmg = mouse.getBestDamage();
+                if ((rivel_hp + dmg.min) <= 0) {
+                    p = dmg;
+                } else {
+                    if (hp > rivel_hp) {
+                        p = dmg;
+                    }
+                    if (hp < rivel_hp || p.cell == null) {
+
+                        if ((rivel_hp + dmg.min) <= hp && hp >= 30) {
+                            p = dmg;
+                        } else {
+                            p = mouse.getBestHealth();
+                        }
+
+                    }
+                    if (p.cell == null) {
+                        p = mouse.getBestStep();
+                    }
+
+                }
+
+             }
+        return p;
     }
 
 
@@ -234,6 +303,52 @@ public class Ai {
          }
          return 0;
          
+     }
+
+     private boolean bombExits(){
+
+         try {
+                 
+                 Rectangle screen = new Rectangle(board.ip.mouse_x-60, board.ip.mouse_y+27,10,10);
+                 BufferedImage image = robot.createScreenCapture(screen);
+
+
+                 IColor gray = new IColor("gray");
+                 gray.min_red = 100;
+                 gray.max_red = 116;
+                 gray.min_blue = 100;
+                 gray.max_blue = 110;
+                 gray.min_green = 100;
+                 gray.max_green = 110;
+
+                 int rgb;
+                 int  r ;
+                 int  g;
+                 int  b ;
+
+                 
+
+                 for(int i =0; i < 10;i++){
+                      rgb = image.getRGB(i, i);
+                      r = (rgb >> 16) & 0xff;
+                      g = (rgb >> 8) & 0xff;
+                      b = rgb & 0xff;
+                     if(gray.inColor(r, g, b)){
+                        return true;
+                     }
+                 }
+
+
+
+                 return false;
+
+
+
+         } catch (Exception e) {
+         }
+
+
+        return true;
      }
 
 }

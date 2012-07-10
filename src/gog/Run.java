@@ -16,7 +16,8 @@ class Run {
     JFrame mframe;
     static int WIDTH =  700;
     static int HEIGHT = 700;
-
+    static   final JLabel lb_hp = new JLabel("-");
+    static   final JLabel lb_rivel_hp = new JLabel("-");
 
     ImagePuller ip;
     JLabel info;
@@ -98,12 +99,12 @@ class Run {
         b.setPreferredSize(new Dimension(200,50));
         JButton b2 = new JButton("Бомба");
         b2.setPreferredSize(new Dimension(200,50));
-        JButton b3 = new JButton("Ход");
+        final JButton b3 = new JButton("Ход");
         b3.setPreferredSize(new Dimension(200,50));
 
         b4 = new JButton("Робот");
         b4.setPreferredSize(new Dimension(200,50));
-
+        
 
          JCheckBox autostep = new JCheckBox("Автоход");
          autostep.setSelected(false);
@@ -172,6 +173,7 @@ class Run {
                                 ip.setLftTopHpCoords(bg.gethpX(), bg.gethpY());
                                 info.setText("Координаты заданы");
                                 ip.repaint();
+                                b3.doClick();
                             }
                         });
 
@@ -206,7 +208,7 @@ class Run {
                                     brd.maxDamage = true;
                                     brd.setAuto(auto);
                                     brd.setCells();
-                                    brd.bestStep();
+                                    brd.autoStep();
 
                                 }
                             });
@@ -267,6 +269,8 @@ class Run {
         p1.add(b3,BorderLayout.PAGE_END);
         p1.add(autostep,BorderLayout.PAGE_END);
         p1.add(b4,BorderLayout.PAGE_END);
+        p1.add(lb_hp,BorderLayout.PAGE_END);
+        p1.add(lb_rivel_hp,BorderLayout.PAGE_END);
         mframe.add(contentPane);
 
         

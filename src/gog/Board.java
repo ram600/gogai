@@ -161,6 +161,10 @@ public class Board {
         analyser2.bestBomb();
     }
 
+    public void autoStep(){
+        analyser2.autoStep();
+    }
+
 
     protected boolean setColorXX(Cell o) {
         System.out.println("Позиция " + o.row_numb + " " + o.col_numb);

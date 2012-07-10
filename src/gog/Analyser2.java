@@ -5,7 +5,10 @@
 
 package gog;
 
-import gog.Board;
+import java.awt.Color;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -16,9 +19,11 @@ public class Analyser2 {
   protected Board board;
   protected int auto = 2;
   public boolean maxDamage = false;
-
+  protected Ai ai;
     Analyser2(Board board) {
         this.board = board;
+        ai = new Ai(board);
+        ai.setHp();
     }
 
     public void  bestBomb(){
@@ -55,18 +60,19 @@ public class Analyser2 {
 
       if(auto < 2){
           Mouse m = new Mouse(Va.points,this.board);
-          Ai ai = new Ai(board,m);
           if(!maxDamage){
             m.baseStep(m.getBestStep());
           }else{
-              ai.makeStep();
-              //m.clickBestDamage();
+             m.baseStep(m.getBestDamage());
           }
       }
       Va.points.clear();
     }
 
     public void autoStep(){
+        
+        ai.makeStep();
+        //bombExits();
     
 
     }
@@ -75,6 +81,8 @@ public class Analyser2 {
         this.auto = auto;
      }
 
-    
+
+     
+
 
 }

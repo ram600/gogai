@@ -41,7 +41,7 @@ public class Mouse {
     public void simpleClick(int x,int y){
 
         robot.mouseMove(x,y); // Передвигаем мышь на координаты 100,100
-        robot.delay(2000);
+        robot.delay(20);
         robot.mousePress(InputEvent.BUTTON1_MASK); //Кликаем левой кнопкой мыши.
         robot.delay(10);
         robot.mouseRelease(InputEvent.BUTTON1_MASK);
@@ -142,7 +142,7 @@ public class Mouse {
     
 
     public void explosionBestBomb(){
-         setStart();
+         
          Point bestp = new Point();
         if(pc.best_max.max > 0){
             bestp = pc.best_max;
@@ -157,13 +157,18 @@ public class Mouse {
             bestp = pc.best_tnt;
         }
 
-        try {
+       baseBomb(bestp);
+
+    }
+
+    public void baseBomb(Point bestp){
+         try {
+             setStart();
              simpleClick(board.ip.mouse_x+delta_x, board.ip.mouse_y+delta_y);
              simpleClick(bestp.cell.absolute_x, bestp.cell.absolute_y);
              robot.mouseMove(startx,starty); // Передвигаем мышь на координаты 100,100
         } catch (Exception e) {
         }
-
     }
 
 

@@ -18,37 +18,6 @@ public class BombAnalyse extends Paint {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Override
     protected void check(Cell c) {
 
@@ -120,10 +89,10 @@ public class BombAnalyse extends Paint {
         
        // p_hor = totalPoint(this.tmp_cells, false);
         //p_hor.cell  = c;
-        
-        points.add(p_vert);
         p_vert.max +=max;
         p_vert.min +=min;
+        points.add(p_vert);
+        
         //points.add(p_hor);
         this.tmp_cells = null;
     }
