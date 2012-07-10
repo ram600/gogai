@@ -155,6 +155,7 @@ class Run {
 //                        ip.setLftTopCorneCoords();
 //                        info.setText("Координаты заданы");
 //                        ip.repaint();
+                    // OLOLOLO
 
 
                    JFrame frame = new JFrame("Transparent Window");
