@@ -77,6 +77,9 @@ public class PointCollection {
       best_tnt  = new Point();
       collection = new ArrayList<Point>();
     }
+    public void clearSimpleCollect(){
+        collection = new ArrayList<Point>();
+    }
 
 
 

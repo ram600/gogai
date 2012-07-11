@@ -46,14 +46,22 @@ public class Board {
 
         this.cells = new ArrayList(this.countCell + 1);
 
-        this.cells.add(new Cell(0, 0, 0));
+        //this.cells.add(new Cell(0, 0, 0));
 
         Cell.setWidth(Math.round(this.width / this.maxCell));
         Cell.setHeight(Math.round(this.height / this.maxRow));
 
         this.ip = ip;
         initColors();
+        this.analyser2 = new Analyser2(this);
     }
+
+
+    public void setIP(ImagePuller ip){
+        this.bi = ip.image;
+        this.ip = ip;
+    }
+
 
     public void upImg(ImagePuller ip){
         this.bi = ip.image;
@@ -63,6 +71,7 @@ public class Board {
 
     public void setAuto(int auto){
         this.auto = auto;
+        analyser2.setAuto(auto);
     }
 
     private void initColors() {
@@ -129,6 +138,8 @@ public class Board {
     }
 
     public void setCells() {
+        this.cells.clear();
+        this.cells.add(new Cell(0, 0, 0));
         
         int i = 0;
         Graphics g = this.ip.getGraphics();
@@ -146,7 +157,7 @@ public class Board {
             }
 
         }
-        this.analyser2 = new Analyser2(this);
+        
         analyser2.maxDamage = maxDamage;
         analyser2.setAuto(auto);
         
@@ -162,7 +173,9 @@ public class Board {
     }
 
     public void autoStep(){
+
         analyser2.autoStep();
+        
     }
 
 

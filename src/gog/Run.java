@@ -115,7 +115,7 @@ class Run {
             }
         });
 
-
+        
 
         b2.addActionListener(new ActionListener() {
 
@@ -123,7 +123,7 @@ class Run {
                 ip.repaint();
                 Timer t = new Timer(100,new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
-                        brd = new Board(ip, 9, 7);
+                        brd.setIP(ip);
                         brd.setAuto(auto);
                         brd.setCells();
                         brd.bestBomb();
@@ -173,6 +173,7 @@ class Run {
                                 ip.setLftTopHpCoords(bg.gethpX(), bg.gethpY());
                                 info.setText("Координаты заданы");
                                 ip.repaint();
+                                brd = new Board(ip, 9, 7);
                                 b3.doClick();
                             }
                         });
@@ -204,7 +205,7 @@ class Run {
                             ip.repaint();
                             Timer t = new Timer(100,new ActionListener() {
                             public void actionPerformed(ActionEvent ae) {
-                                    brd = new Board(ip, 9, 7);
+                                    brd.setIP(ip);
                                     brd.maxDamage = true;
                                     brd.setAuto(auto);
                                     brd.setCells();
@@ -227,12 +228,12 @@ class Run {
 
                 if (!blitz) {
                     blitz = true;
-                    auto = 1;
+                    
                     b4.setForeground(Color.red);
                     t2.start();
                 } else {
                     blitz = false;
-                    auto = 2;
+                   
                     b4.setForeground(Color.black);
                     t2.stop();
                 }
@@ -251,7 +252,7 @@ class Run {
                 Timer t = new Timer(100,new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
                    
-                        brd = new Board(ip, 9, 7);
+                        brd.setIP(ip);
                         brd.setAuto(auto);
                         brd.setCells();
                         brd.bestStep();

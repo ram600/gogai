@@ -15,9 +15,11 @@ import java.awt.image.ImageProducer;
 import java.awt.image.PixelGrabber;
 import java.awt.image.RGBImageFilter;
 import java.io.File;
+import java.util.Random;
 import javax.imageio.ImageIO;
 import percept.Perceptron;
 import percept.Teacher;
+
 
 /**
  *
@@ -72,6 +74,8 @@ public class Ai {
             BufferedImage img21 = img2.getSubimage(0,0,  8, 12);
             BufferedImage img22 = img2.getSubimage(8,0,  8, 12);
             BufferedImage img23 = img2.getSubimage(16,0, 8, 12);
+
+
 
 
             filter =  new  RGBImageFilter(){
@@ -143,9 +147,51 @@ public class Ai {
     }
 
 
+    public boolean isMyStep(boolean blitz){
+
+
+        //take 2 random row and if mor then 2 cell = NONE COLOR // it is rivel step
+
+        
+        int count = 0;
+        int max = 5;
+        int add = 1;
+
+        if(blitz){
+            max = 2;
+            add = 5;
+        }
+
+
+        for (int i = 0; i < 2 ; i++) {
+            int rand_row = new Random().nextInt(max)+add;
+
+
+            for(int j =0;j < 9;j++){
+                System.out.println((rand_row * 9)+j);
+                Cell c = board.cells.get((rand_row * 9)+j);
+                if(c.color.name == IColor.UNDEFINED_COLOR){
+                   count++;
+                }
+                
+            }
+            if(count >= 4){
+                return false;
+            }
+
+        }
+
+
+        return true;
+
+    }
 
     public void makeStep(){
         setHp();
+
+        if(isMyStep(false)){
+        
+        
 
         BombAnalyse b = null;
         if (bombExits()) {
@@ -176,12 +222,33 @@ public class Ai {
               mouse.baseStep(getBestPoint());
               VerticalAnalyse.points.clear();
            }
-
+         }
 
 
 
         
        
+
+    }
+
+    public void makeBlitz(){
+        
+        if(isMyStep(true)){
+              HorizontalAnalyse Ha = new HorizontalAnalyse(this.board);
+              VerticalAnalyse   Va = new VerticalAnalyse(this.board);
+
+              Ha.analyse();
+              Va.analyse();
+
+
+              mouse = new Mouse(VerticalAnalyse.points,this.board);
+
+              mouse.baseStep(mouse.getBestDamage());
+              VerticalAnalyse.points.clear();
+
+        
+        
+        }
 
     }
 

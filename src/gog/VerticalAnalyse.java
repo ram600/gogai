@@ -48,19 +48,82 @@ public class VerticalAnalyse extends Paint{
 
 
     public void check(Cell c) {
-
+if (this.tmp_cells == null) {
+            this.tmp_cells = this.cells;
+        }
         int t = -1;
+//
+//
+//        ArrayList<Cell> t1 = chain(c, c.row_numb + -1 * t, c.col_numb + -1 * t, t, false);
+//        ArrayList<Cell> t2 = chain(c, c.row_numb + -2 * t, c.col_numb, t, false);
+//        ArrayList<Cell> t3 = chain(c, c.row_numb + -1 * t, c.col_numb + 1 * t, t, false);
+//
+//        t = 1;
+//
+//        ArrayList<Cell> t4 = chain(c, c.row_numb + -1 * t, c.col_numb + -1 * t, t, false);
+//        ArrayList<Cell> t5 = chain(c, c.row_numb + -2 * t, c.col_numb, t, false);
+//        ArrayList<Cell> t6 = chain(c, c.row_numb + -1 * t, c.col_numb + 1 * t, t, false);
 
 
-        ArrayList<Cell> t1 = chain(c, c.row_numb + -1 * t, c.col_numb + -1 * t, t, false);
-        ArrayList<Cell> t2 = chain(c, c.row_numb + -2 * t, c.col_numb, t, false);
-        ArrayList<Cell> t3 = chain(c, c.row_numb + -1 * t, c.col_numb + 1 * t, t, false);
 
-        t = 1;
+        int pos_betw = getPostition(c.row_numb, c.col_numb + -1*t);
+         ArrayList<Cell> t1 = new ArrayList<Cell>();
+         ArrayList<Cell> t6 = new ArrayList<Cell>();
+         if(pos_betw > 0){
+             Cell cell_between = this.tmp_cells.get(pos_betw);
+             if(cell_between.color.name != IColor.UNDEFINED_COLOR){
+               t1 = chain(c, c.row_numb + -1 * t, c.col_numb + -1 * t, t, false);
 
-        ArrayList<Cell> t4 = chain(c, c.row_numb + -1 * t, c.col_numb + -1 * t, t, false);
-        ArrayList<Cell> t5 = chain(c, c.row_numb + -2 * t, c.col_numb, t, false);
-        ArrayList<Cell> t6 = chain(c, c.row_numb + -1 * t, c.col_numb + 1 * t, t, false);
+               t = 1;
+               t6 = chain(c, c.row_numb + -1 * t, c.col_numb + 1 * t, t, false);
+             }
+         }
+
+         t = -1;
+
+        //***** если между нормальная клетка,то ищем по этому вектору
+         pos_betw = getPostition(c.row_numb + -1*t, c.col_numb);
+         ArrayList<Cell> t2 = new ArrayList<Cell>();
+         if(pos_betw > 0){
+             Cell cell_between = this.tmp_cells.get(pos_betw);
+             if(cell_between.color.name != IColor.UNDEFINED_COLOR){
+               t2 = chain(c, c.row_numb + -2 * t, c.col_numb, t, false);
+             }
+         }
+
+
+
+         pos_betw = getPostition(c.row_numb, c.col_numb+ 1*t);
+         ArrayList<Cell> t3 = new ArrayList<Cell>();
+         ArrayList<Cell> t4 = new ArrayList<Cell>();
+         if(pos_betw > 0){
+             Cell cell_between = this.tmp_cells.get(pos_betw);
+             if(cell_between.color.name != IColor.UNDEFINED_COLOR){
+               t3 = chain(c, c.row_numb + -1 * t, c.col_numb + 1 * t, t, false);
+
+               t = 1;
+               t4 = chain(c, c.row_numb + -1 * t, c.col_numb + -1 * t, t, false);
+             }
+         }
+
+
+         t = 1;
+         //***** если между нормальная клетка,то ищем по этому вектору
+         pos_betw = getPostition(c.row_numb + -1*t, c.col_numb);
+         ArrayList<Cell> t5 = new ArrayList<Cell>();
+         if(pos_betw > 0){
+             Cell cell_between = this.tmp_cells.get(pos_betw);
+             if(cell_between.color.name != IColor.UNDEFINED_COLOR){
+               t5 = chain(c, c.row_numb + -2 * t, c.col_numb, t, false);
+             }
+         }
+
+
+
+
+
+
+
 
 
         //объединяем левый низ-верх и правый низ верх,тем самым сможем найти 4 и 5 клеточные совпадения

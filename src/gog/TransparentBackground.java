@@ -42,6 +42,8 @@ public class TransparentBackground extends JComponent {
        g.setColor(Color.blue);
        g.drawRect(12,105,ImagePuller.IMG_WIDTH,ImagePuller.IMG_HEIGHT);
        g.drawRect(103,30,24,12);
+      
+
        g.drawRect(446,30,24,12);
        
    }

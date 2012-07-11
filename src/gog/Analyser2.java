@@ -22,7 +22,7 @@ public class Analyser2 {
   protected Ai ai;
     Analyser2(Board board) {
         this.board = board;
-        ai = new Ai(board);
+        ai = new Ai(this.board);
         ai.setHp();
     }
 
@@ -30,6 +30,7 @@ public class Analyser2 {
 
             BombAnalyse b = new BombAnalyse(board);
             b.analyse();
+            b.points.clearSimpleCollect();
             b.show();
             b.paintSpecial();
             if(auto < 2){
@@ -70,9 +71,12 @@ public class Analyser2 {
     }
 
     public void autoStep(){
-        
-        ai.makeStep();
+        if(auto < 2){
+          ai.makeBlitz();
+        }else{
+          ai.makeStep();
         //bombExits();
+        }
     
 
     }
