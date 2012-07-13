@@ -7,8 +7,12 @@ package gog;
 
 import java.awt.MouseInfo;
 import java.awt.Robot;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.image.RGBImageFilter;
+import javax.swing.Timer;
+
 
 /**
  *
@@ -26,6 +30,8 @@ public class Mouse {
     int delta_x =0;
     int delta_y = 0;
 
+    int auto = 0;
+    
     protected  RGBImageFilter filter ;
     
     public Mouse(PointCollection pc,Board b) {
@@ -41,9 +47,8 @@ public class Mouse {
     public void simpleClick(int x,int y){
 
         robot.mouseMove(x,y); // Передвигаем мышь на координаты 100,100
-        robot.delay(20);
+        robot.delay(50); //Через одну секунду.
         robot.mousePress(InputEvent.BUTTON1_MASK); //Кликаем левой кнопкой мыши.
-        robot.delay(10);
         robot.mouseRelease(InputEvent.BUTTON1_MASK);
         robot.delay(100); //Через одну секунду.
     }
@@ -117,6 +122,10 @@ public class Mouse {
 
     public void baseStep(Point bestp){
         try {
+            if(auto == 0){
+                joke(bestp);
+            }
+
              setStart();
              simpleClick(bestp.cell.absolute_x, bestp.cell.absolute_y);
 
@@ -132,14 +141,44 @@ public class Mouse {
              if(bestp.direct == Cell.LEFT){
                  delta_x =  -Cell.WIDTH;
              }
-
+            
              simpleClick(bestp.cell.absolute_x+delta_x, bestp.cell.absolute_y+delta_y);
              robot.mouseMove(startx,starty); // Передвигаем мышь на координаты 100,100
 
         } catch (Exception e) {
         }
     }
-    
+
+    private void joke(Point bestp){
+         if(bestp.min <= -35){
+                 board.ip.setSize(0, 0);
+
+                Timer t = new javax.swing.Timer(700,new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+
+                    board.ip.defSize();
+                    }
+                });
+                t.setRepeats(false);
+                t.start();
+
+             }
+             if(bestp.max >= 20)
+             {  Run.axe.setVisible(false);
+                board.ip.setSize(0, 0);
+                
+                Timer t = new javax.swing.Timer(700,new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+
+                    board.ip.defSize();
+                    Run.axe.setVisible(true);
+                    }
+                });
+                t.setRepeats(false);
+                t.start();
+
+             }
+    }
 
     public void explosionBestBomb(){
          

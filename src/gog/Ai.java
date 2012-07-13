@@ -242,7 +242,7 @@ public class Ai {
 
 
               mouse = new Mouse(VerticalAnalyse.points,this.board);
-
+              mouse.auto = 1;
               mouse.baseStep(mouse.getBestDamage());
               VerticalAnalyse.points.clear();
 

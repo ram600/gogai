@@ -8,17 +8,23 @@ import java.awt.event.ActionListener;
 
 import java.awt.*;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageProducer;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.border.LineBorder;
 
 class Run {
 
     JFrame mframe;
-    static int WIDTH =  700;
+    static int WIDTH =  630;
     static int HEIGHT = 700;
     static   final JLabel lb_hp = new JLabel("-");
     static   final JLabel lb_rivel_hp = new JLabel("-");
-
+   
+    
     ImagePuller ip;
     JLabel info;
     Board brd;
@@ -26,13 +32,19 @@ class Run {
     int auto = 2;
     boolean blitz = false;
     JButton b4;
-
+    static JLabel axe;
+    static JLabel niga;
 
 
     JFrame fff;
     BufferedImage imm;
     ImageProducer ipp;
     Rectangle screen;
+
+        JButton b ;
+        JButton b2 ;
+        JButton tnt_button ;
+         JButton b3 ;
 
 
 
@@ -77,13 +89,13 @@ class Run {
         contentPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         
 
-        JPanel p1 = new JPanel();
+        final JPanel p1 = new JPanel();
         p1.setPreferredSize(new Dimension(ImagePuller.IMG_WIDTH, ImagePuller.HEIGHT));
-        p1.setBorder(BorderFactory.createLineBorder(Color.RED));
+        //p1.setBorder(BorderFactory.createLineBorder(Color.RED));
         contentPane.add(p1,BorderLayout.LINE_START);
 
         JPanel p2 = new JPanel();
-        p2.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+        //p2.setBorder(BorderFactory.createLineBorder(Color.GREEN));
         contentPane.add(p2,BorderLayout.CENTER);
 
         info = new JLabel("Задайте координаты");
@@ -91,18 +103,35 @@ class Run {
         p1.add(info,BorderLayout.PAGE_START);
         p1.add(ip,BorderLayout.LINE_END);
 
+        
+        Image image = null;
+        try {
+            
+            File file = new File(new File(".").getAbsolutePath()+"/data/help.jpg");
+            image = ImageIO.read(file);
 
+        } catch (IOException e) {
+            System.out.print(e.getMessage());
+        }
+
+       
+        JLabel help = new JLabel(new ImageIcon(image));
+        
 
         
 
-        JButton b = new JButton("Задать координаты");
+         b = new JButton("Задать координаты");
         b.setPreferredSize(new Dimension(200,50));
-        JButton b2 = new JButton("Бомба");
-        b2.setPreferredSize(new Dimension(200,50));
-        final JButton b3 = new JButton("Ход");
+        
+         b2 = new JButton("Бомба");
+        b2.setPreferredSize(new Dimension(100,50));
+        tnt_button = new JButton("Динамит");
+        tnt_button.setPreferredSize(new Dimension(100,50));
+
+        b3 = new JButton("Ход");
         b3.setPreferredSize(new Dimension(200,50));
 
-        b4 = new JButton("Робот");
+        b4 = new JButton("Блиц");
         b4.setPreferredSize(new Dimension(200,50));
         
 
@@ -126,7 +155,31 @@ class Run {
                         brd.setIP(ip);
                         brd.setAuto(auto);
                         brd.setCells();
-                        brd.bestBomb();
+                        brd.bestBomb(false);
+                        b2.setForeground(Color.red);
+                        t2.stop();
+                        offAll(b2);
+
+                    }
+                });
+                t.setRepeats(false);
+                t.start();
+            }
+        });
+
+        tnt_button.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent ae) {
+                ip.repaint();
+                Timer t = new Timer(100,new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                        brd.setIP(ip);
+                        brd.setAuto(auto);
+                        brd.setCells();
+                        brd.bestBomb(true);
+                        tnt_button.setForeground(Color.red);
+                        t2.stop();
+                        offAll(tnt_button);
 
                     }
                 });
@@ -141,9 +194,9 @@ class Run {
         
         b.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-               info.setText("Курсор на левый угол игрового поля.Ждите 2 сек.");
-               Timer t = new Timer(500,new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
+               info.setText("Наведите рамочку на игровую облать");
+//               Timer t = new Timer(100,new ActionListener() {
+//                public void actionPerformed(ActionEvent ae) {
 
 
                     
@@ -163,18 +216,47 @@ class Run {
                    frame.addComponentListener(new TransparentComponentListener());
                    final TransparentBackground bg = new TransparentBackground(frame);
                    bg.setLayout(new BorderLayout());
-                   JButton button = new JButton("Задать координаты");
+                   JButton button = new JButton("УСТАНОВИТЬ");
                    bg.add("North", button);
                    button.addActionListener(new ActionListener() {
 
                             public void actionPerformed(ActionEvent ae) {
                                 //System.out.println(bg.getboardX());
-                                ip.setLftTopCorneCoords(bg.getboardX()+5,bg.getboardY()+4);
+                                ip.setLftTopCorneCoords(bg.getboardX()+7,bg.getboardY()+7);
                                 ip.setLftTopHpCoords(bg.gethpX(), bg.gethpY());
                                 info.setText("Координаты заданы");
                                 ip.repaint();
                                 brd = new Board(ip, 9, 7);
                                 b3.doClick();
+
+                                try {
+
+
+
+                                    Image im_axe = ImageIO.read(new File(new File(".").getAbsolutePath()+"/data/axe.png"));
+                                     p1.setLayout(null);
+                                     axe = new JLabel(new ImageIcon(im_axe));
+                                     p1.add(axe);
+                                     Insets insets = p1.getInsets();
+                                     Dimension size = axe.getPreferredSize();
+                                     axe.setBounds(65+ insets.left, 25 + insets.top,
+                                     size.width, size.height);
+                                     
+                                    Image im_niga = ImageIO.read(new File(new File(".").getAbsolutePath()+"/data/niga.jpg"));
+                                     p1.setLayout(null);
+                                     niga = new JLabel(new ImageIcon(im_niga));
+                                     p1.add(niga);
+                                      insets = p1.getInsets();
+                                      size = niga.getPreferredSize();
+                                     niga.setBounds(65+ insets.left, 25 + insets.top,
+                                     size.width, size.height);
+
+                                     
+                                     
+                                } catch (Exception e) {
+                                }
+                                
+
                             }
                         });
 
@@ -189,10 +271,10 @@ class Run {
 
 
                         
-                    }
-                });
-               t.setRepeats(false);
-               t.start();
+//                    }
+//                });
+//               t.setRepeats(false);
+//               t.start();
                
             }
         });
@@ -210,6 +292,7 @@ class Run {
                                     brd.setAuto(auto);
                                     brd.setCells();
                                     brd.autoStep();
+                                    
 
                                 }
                             });
@@ -231,6 +314,7 @@ class Run {
                     
                     b4.setForeground(Color.red);
                     t2.start();
+                    offAll(b4);
                 } else {
                     blitz = false;
                    
@@ -256,6 +340,9 @@ class Run {
                         brd.setAuto(auto);
                         brd.setCells();
                         brd.bestStep();
+                        b3.setForeground(Color.red);
+                        t2.stop();
+                        offAll(b3);
 
                     }
                 });
@@ -265,14 +352,76 @@ class Run {
         });
 
 
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Помощь");
+        menu.setMnemonic(KeyEvent.VK_A);
+        menu.getAccessibleContext().setAccessibleDescription( "The only menu in this program that has menu items");
+        menuBar.add(menu);
+        //a group of JMenuItems
+        JMenuItem menuItem = new JMenuItem("Помощь",
+                                 KeyEvent.VK_F1);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_F1, ActionEvent.ALT_MASK));
+        menuItem.setAccelerator(KeyStroke.getKeyStroke("F1"));
+        menuItem.getAccessibleContext().setAccessibleDescription(
+                "This doesn't really do anything");
+
+        menuItem.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent ae) {
+                JFrame help = new JFrame("Помощь");
+                help.setSize(900, 500);
+
+                Image image = null;
+                try {
+
+                    File file = new File(new File(".").getAbsolutePath()+"/data/help2.jpg");
+                    image = ImageIO.read(file);
+                    
+
+                } catch (IOException e) {
+                    System.out.print(e.getMessage());
+                }
+                JPanel h_p = new JPanel();
+              
+              
+                
+                JLabel help_lbl = new JLabel(new ImageIcon(image));
+                h_p.add(help_lbl);
+                
+
+                JScrollPane jScrollPane = new JScrollPane(h_p);
+                
+                jScrollPane.setPreferredSize(new Dimension(700, 500));
+                jScrollPane.setViewportBorder(new LineBorder(Color.RED));
+                jScrollPane.setAutoscrolls(true);
+                //h_p.add(jScrollPane);
+                
+                
+                help.add(jScrollPane,BorderLayout.PAGE_START);
+                help.setVisible(true);
+            }
+        });
+        
+        menu.add(menuItem);
+
+
+        menuBar.add(menu);
+
+
         p1.add(b,BorderLayout.PAGE_END);
         p1.add(b2,BorderLayout.PAGE_END);
+        p1.add(tnt_button,BorderLayout.PAGE_END);
         p1.add(b3,BorderLayout.PAGE_END);
         p1.add(autostep,BorderLayout.PAGE_END);
         p1.add(b4,BorderLayout.PAGE_END);
-        p1.add(lb_hp,BorderLayout.PAGE_END);
-        p1.add(lb_rivel_hp,BorderLayout.PAGE_END);
+       // p1.add(lb_hp,BorderLayout.PAGE_END);
+       // p1.add(lb_rivel_hp,BorderLayout.PAGE_END);
+        p1.add(help,BorderLayout.PAGE_END);
+        
         mframe.add(contentPane);
+        mframe.setJMenuBar(menuBar);
 
         
         
@@ -281,7 +430,25 @@ class Run {
 
     
 
+    private void offAll(Component c){
 
+        if(!c.equals(b)){
+            b.setForeground(Color.black);
+        }
+        if(!c.equals(b2)){
+            b2.setForeground(Color.black);
+        }
+        if(!c.equals(tnt_button)){
+            tnt_button.setForeground(Color.black);
+        }
+        if(!c.equals(b3)){
+            b3.setForeground(Color.black);
+        }
+        if(!c.equals(b4)){
+            b4.setForeground(Color.black);
+        }
+
+    }
     
 
 

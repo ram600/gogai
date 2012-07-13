@@ -52,6 +52,9 @@ class ImagePuller extends JPanel{
         g2.drawImage(i,null ,this);
        
     }
+    public void defSize(){
+        this.setSize(IMG_WIDTH, IMG_HEIGHT);
+    }
  
 
     public void setLftTopCorneCoords(){

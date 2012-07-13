@@ -11,6 +11,8 @@ package gog;
  */
 public class BombAnalyse extends Paint {
 
+
+    boolean is_tnt = false;
     public BombAnalyse(Board board) {
         super(board);
     }
@@ -35,6 +37,53 @@ public class BombAnalyse extends Paint {
             }
             downCol(tmp);
         }
+
+       
+        
+        if(is_tnt){
+            pos = getPostition(c.row_numb-1, c.col_numb-1);
+            if(pos > 0){
+            tmp = this.tmp_cells.get(pos);
+            if(tmp.color.point > 0){
+                max += tmp.color.point;
+            }else{
+                min += tmp.color.point;
+            }
+            downCol(tmp);
+           }
+            pos = getPostition(c.row_numb-1, c.col_numb+1);
+            if(pos > 0){
+            tmp = this.tmp_cells.get(pos);
+            if(tmp.color.point > 0){
+                max += tmp.color.point;
+            }else{
+                min += tmp.color.point;
+            }
+            downCol(tmp);
+           }
+            pos = getPostition(c.row_numb+1, c.col_numb-1);
+            if(pos > 0){
+            tmp = this.tmp_cells.get(pos);
+            if(tmp.color.point > 0){
+                max += tmp.color.point;
+            }else{
+                min += tmp.color.point;
+            }
+            downCol(tmp);
+           }
+            pos = getPostition(c.row_numb+1, c.col_numb+1);
+            if(pos > 0){
+            tmp = this.tmp_cells.get(pos);
+            if(tmp.color.point > 0){
+                max += tmp.color.point;
+            }else{
+                min += tmp.color.point;
+            }
+            downCol(tmp);
+           }
+
+        }
+
 
 
         downCol(this.tmp_cells.get(getPostition(c.row_numb, c.col_numb)));

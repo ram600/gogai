@@ -167,9 +167,9 @@ public class Board {
        
         analyser2.bestStep();
     }
-    public void bestBomb(){
+    public void bestBomb(boolean is_tnt){
         
-        analyser2.bestBomb();
+        analyser2.bestBomb(is_tnt);
     }
 
     public void autoStep(){

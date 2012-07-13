@@ -146,6 +146,7 @@ public abstract class Paint extends Base {
               }
 
             Graphics g = this.board.ip.getGraphics();
+            
             g.setFont(new Font(null, 10, 9));
             g.setColor(bg_color);
             g.fillRect(top_x,top_y, Cell.WIDTH -Math.round(Cell.WIDTH/2)+4, 20);

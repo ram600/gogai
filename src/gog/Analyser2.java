@@ -26,9 +26,10 @@ public class Analyser2 {
         ai.setHp();
     }
 
-    public void  bestBomb(){
+    public void  bestBomb(boolean is_tnt){
 
             BombAnalyse b = new BombAnalyse(board);
+            b.is_tnt= is_tnt;
             b.analyse();
             b.points.clearSimpleCollect();
             b.show();
@@ -49,10 +50,10 @@ public class Analyser2 {
       VerticalAnalyse   Va = new VerticalAnalyse(this.board);
 
       Ha.analyse();
-      Ha.show();
-      //Ha.rivelPoint();
-
       Va.analyse();
+
+      HorizontalAnalyse.points.clearSimpleCollect();
+      Ha.show();
       Va.show();
 
       
@@ -71,12 +72,12 @@ public class Analyser2 {
     }
 
     public void autoStep(){
-        if(auto < 2){
+       // if(auto < 2){
           ai.makeBlitz();
-        }else{
-          ai.makeStep();
+      //  }else{
+       //   ai.makeStep();
         //bombExits();
-        }
+       // }
     
 
     }
