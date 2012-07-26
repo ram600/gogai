@@ -35,7 +35,12 @@ public class Mouse {
     protected  RGBImageFilter filter ;
     
     public Mouse(PointCollection pc,Board b) {
-        this.pc = pc;
+        try {
+            this.pc = pc.clone();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        
         this.board = b;
         try {
             robot = new Robot();
@@ -50,7 +55,7 @@ public class Mouse {
         robot.delay(50); //Через одну секунду.
         robot.mousePress(InputEvent.BUTTON1_MASK); //Кликаем левой кнопкой мыши.
         robot.mouseRelease(InputEvent.BUTTON1_MASK);
-        robot.delay(100); //Через одну секунду.
+        robot.delay(300); //Через одну секунду.
     }
 
 
@@ -211,6 +216,9 @@ public class Mouse {
     }
 
 
+    public PointCollection getPoints(){
+        return pc;
+    }
 
 
 

@@ -9,7 +9,7 @@ import java.util.ArrayList;
  *
  * @author admin
  */
-public class Point implements Comparable<Point>{
+public class Point implements Comparable<Point>,Cloneable{
 
    public int min = 0;
    public int max = 0;
@@ -53,7 +53,15 @@ public class Point implements Comparable<Point>{
         return tnt*15 + bomb*10 + Math.round((min/5)) + Math.round((max/5));
     }
 
-  
+    @Override
+    protected Point clone() throws CloneNotSupportedException {
+        Point p = (Point)super.clone();
+        //p.cell = cell.clone();
+        
+        return p;
+    }
+
+
 
 
 }

@@ -35,6 +35,7 @@ public class Ai {
     protected boolean teach = false;
     protected  Mouse mouse;
     protected Robot robot;
+    protected IColor nullhp;
 
     Ai(Board b){
         board = b;
@@ -51,7 +52,14 @@ public class Ai {
        public void init(){
             perceptron = new Perceptron(10, 9*12);
             //teachANN();
-            loadMemory();
+            //loadMemory();
+            nullhp = new IColor("gray");
+            nullhp.min_red = 140;
+            nullhp.max_red = 145;
+            nullhp.min_green = 125;
+            nullhp.max_green = 130;
+            nullhp.min_blue = 116;
+            nullhp.max_blue = 121;
             
             
         }
@@ -146,6 +154,107 @@ public class Ai {
 
     }
 
+    protected void setHpStripe(){
+            Rectangle screen = new Rectangle(board.ip.my_hp_x,board.ip.my_hp_y,560,12);
+            BufferedImage image = robot.createScreenCapture(screen);
+ 
+           BufferedImage img1 = image.getSubimage(0,0, 230, 12);
+           BufferedImage img2 = image.getSubimage(325,0, 230, 12);
+           hp       =  getMyHpLimit(img1);
+           rivel_hp = getRivelHpLimit(img2);
+           System.out.println("m "+hp+" r"+rivel_hp);
+
+//            try {
+//            ImageIO.write(img1, "jpg",new File("/tmp/save"+Math.random()+".jpg"));
+//            ImageIO.write(img2, "jpg",new File("/tmp/save"+Math.random()+".jpg"));
+//        } catch (Exception e) {
+//        }
+
+           
+
+
+    }
+
+    private int getMyHpLimit(BufferedImage img) {
+
+        int pix = 0;
+        int counter;
+        int r = 0;
+        int g = 0;
+        int b = 0;
+
+      
+
+        for (int i = 10; i < img.getWidth(); i++) {
+            counter = 0;
+            for (int j = 0; j < img.getHeight(); j++) {
+
+                //x,y
+                pix = img.getRGB(i, j);
+                r = (pix >> 16) & 0xff;
+                g = (pix >> 8) & 0xff;
+                b = (pix) & 0xff;
+
+                if (nullhp.inColor(r, g, b)) {
+                    break;
+                } else {
+                    if (counter > 10) {
+                        
+                        return (int)((230-i)/2.2);
+                     
+                    } else {
+                        counter++;
+                    }
+                }
+
+
+            }
+
+        }
+
+        return 0;
+    }
+
+
+
+    private int getRivelHpLimit(BufferedImage img) {
+
+        int pix = 0;
+        int counter;
+        int r = 0;
+        int g = 0;
+        int b = 0;
+
+    
+
+        for (int i = 220; i > 0; i--) {
+            counter = 0;
+            for (int j = 0; j < img.getHeight(); j++) {
+
+                //x,y
+                pix = img.getRGB(i, j);
+                r = (pix >> 16) & 0xff;
+                g = (pix >> 8) & 0xff;
+                b = (pix) & 0xff;
+
+                if (nullhp.inColor(r, g, b)) {
+                    break;
+                } else {
+                     if (counter > 10) {
+                        return (int)(i/2.2);
+                    } else {
+                        counter++;
+                    }
+                }
+
+
+            }
+
+        }
+
+        return 0;
+    }
+
 
     public boolean isMyStep(boolean blitz){
 
@@ -186,8 +295,253 @@ public class Ai {
 
     }
 
+
+    public void makeStep2(){
+        setHpStripe();
+
+       
+        if(isMyStep(false)){
+             getMaxDamage();
+         }
+
+
+
+
+
+
+
+
+    }
+
+    private void getMaxDamage(){
+        Point max_dam = null;
+        Mouse mouse1 = null;
+        Mouse mouse2 = null;
+        int type = 0;
+
+        BombAnalyse tnt = null;
+        if(tntExist()){
+            tnt = new BombAnalyse(board);
+            tnt.is_tnt = true;
+            tnt.analyse();
+             mouse1 = new Mouse(tnt.points, board);
+            mouse1.delta_x = -60;
+            mouse1.delta_y = 105;
+
+            max_dam = tnt.points.best_min;
+            if( (rivel_hp+max_dam.min) <= 0){
+                 mouse1.baseBomb(max_dam);
+                 return;
+            }
+
+            
+        }
+        BombAnalyse b = null;
+        if (bombExits()) {
+            b = new BombAnalyse(board);
+            b.analyse();
+             mouse2 = new Mouse(BombAnalyse.points, board);
+            mouse2.delta_x = -60;
+            mouse2.delta_y = 27;
+
+            max_dam = b.points.best_min;
+            if( (rivel_hp+max_dam.min) <= 0){
+                 mouse2.baseBomb(max_dam);
+                 return;
+            }
+            
+           }
+
+            HorizontalAnalyse Ha = new HorizontalAnalyse(this.board);
+            VerticalAnalyse Va = new VerticalAnalyse(this.board);
+
+            Ha.analyse();
+            Va.analyse();
+
+
+            mouse = new Mouse(VerticalAnalyse.points, this.board);
+            max_dam = HorizontalAnalyse.points.best_min;
+            if ((rivel_hp + max_dam.min) <= 0) {
+                mouse.baseStep(max_dam);
+                return;
+            }
+
+//            //*******************HP
+            if(hp <=30){
+                Point best_h = new Point();
+
+                if(mouse1 != null){
+                    type = 1;
+                    best_h = mouse1.getBestHealth();
+                }
+                if(mouse2 != null){
+                    Point bbh = new Point();
+                    if(bbh.max >= best_h.max){
+                        type = 2;
+                        best_h = bbh;
+                    }
+                }
+                Point bvhh = mouse.getBestHealth();
+                if(bvhh.max >= best_h.max){
+                    best_h = bvhh;
+                    type = 0;
+                }
+
+                if(best_h.max > 10){
+                    if(type == 1){
+                        mouse1.baseBomb(best_h);
+                    }
+                    if(type == 2){
+                        mouse2.baseBomb(best_h);
+                    }
+                    mouse.baseStep(best_h);
+                    return;
+                }
+
+            }
+
+
+
+            //get tnt with max damage
+            Point tnt_step = new Point();
+
+            type = 0;
+
+            if(tnt != null){
+
+                if(mouse1.getPoints().best_tnt.tnt > 0){
+                    tnt_step = mouse1.getPoints().best_tnt;
+                    type = 1;
+                }
+
+
+            }
+            if(b != null){
+
+                if(mouse2.getPoints().best_tnt.tnt >= tnt_step.tnt && mouse2.getPoints().best_tnt.min < tnt_step.min){
+                    tnt_step = mouse2.getPoints().best_tnt;
+                    type = 2;
+                }
+            }
+
+            if(mouse.getPoints().best_tnt.tnt >= tnt_step.tnt && mouse.getPoints().best_tnt.min < tnt_step.min){
+                tnt_step = mouse.getPoints().best_tnt;
+                type = 0;
+
+            }
+              if(tnt_step.tnt > 0){
+                    if(type == 1){
+                        mouse1.baseBomb(tnt_step);
+                    }
+                    if(type == 2){
+                        mouse2.baseBomb(tnt_step);
+                    }
+                    mouse.baseStep(tnt_step);
+                    return;
+                }
+
+            //get  bomb with max damage
+            Point bomb_step = new Point();
+
+            type = 0;
+
+            if(tnt != null){
+
+                if(mouse1.getPoints().best_bomb.bomb > 0){
+                    bomb_step = mouse1.getPoints().best_bomb;
+                    type = 1;
+                }
+
+
+            }
+            if(b != null){
+
+                if(mouse2.getPoints().best_bomb.bomb >= bomb_step.bomb && mouse2.getPoints().best_bomb.min < bomb_step.min){
+                    bomb_step = mouse2.getPoints().best_bomb;
+                    type = 2;
+                }
+            }
+
+            if(mouse.getPoints().best_bomb.bomb >= bomb_step.bomb && mouse.getPoints().best_bomb.min < bomb_step.min){
+                bomb_step = mouse.getPoints().best_bomb;
+                type = 0;
+
+            }
+              if(bomb_step.bomb > 0){
+                    if(type == 1){
+                        mouse1.baseBomb(bomb_step);
+                    }
+                    if(type == 2){
+                        mouse2.baseBomb(bomb_step);
+                    }
+                    mouse.baseStep(bomb_step);
+                    return;
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            Point best_damage = new Point();
+            type = 0;
+
+            if(tnt != null){
+                best_damage = mouse1.getBestDamage();
+                type = 1;
+            }
+            if(b != null){
+                Point bomb_damage = mouse2.getBestDamage();
+                if(bomb_damage.min < best_damage.min){
+                    best_damage = bomb_damage;
+                    type = 2;
+                }
+            }
+            Point simple_damage = mouse.getBestDamage();
+            if(simple_damage.min < best_damage.min){
+                best_damage = simple_damage;
+                    type = 0;
+
+            }
+              if(best_damage.min < 0){
+                    if(type == 1){
+                        mouse1.baseBomb(best_damage);
+                    }
+                    if(type == 2){
+                        mouse2.baseBomb(best_damage);
+                    }
+                    mouse.baseStep(best_damage);
+                    return;
+                }
+
+
+
+            //Ищем бомбы или динамиты с максимальным уроном
+            //если нет лучший минус
+            //makeBestStep();
+
+            
+
+
+            
+
+
+
+
+
+       return;
+    }
+
     public void makeStep(){
-        setHp();
+        setHpStripe();
 
         if(isMyStep(false)){
         
@@ -311,10 +665,10 @@ public class Ai {
              g2.drawImage(wimage, 0, 0, null);
              g2.dispose();
 
-             try {
-               ImageIO.write(bi, "jpg", new File("/tmp/save"+Math.random()+".jpg"));
-             } catch (Exception e) {
-             }
+//             try {
+//               ImageIO.write(bi, "jpg", new File("/tmp/save"+Math.random()+".jpg"));
+//             } catch (Exception e) {
+//             }
 
           return bi;
      }
@@ -416,6 +770,58 @@ public class Ai {
 
 
         return true;
+     }
+
+     private boolean tntExist(){
+            try {
+
+                 Rectangle screen = new Rectangle(board.ip.mouse_x-60, board.ip.mouse_y+105,10,10);
+                 BufferedImage image = robot.createScreenCapture(screen);
+
+//                 try {
+//                    ImageIO.write(image, "jpg",new File("/tmp/save"+Math.random()+".jpg"));
+//                } catch (Exception e) {
+//                }
+
+                 IColor gray = new IColor("red");
+                 gray.min_red = 215;
+                 gray.max_red = 250;
+                 gray.min_green = 38;
+                 gray.max_green = 71;
+                 gray.min_blue = 10;
+                 gray.max_blue = 46;
+
+                 int rgb;
+                 int  r ;
+                 int  g;
+                 int  b ;
+
+
+
+                 for(int i =0; i < 10;i++){
+                       rgb = image.getRGB(i, i);
+                      r = (rgb >> 16) & 0xff;
+                      g = (rgb >> 8) & 0xff;
+                      b = rgb & 0xff;
+                     if(gray.inColor(r, g, b)){
+                        
+                        return true;
+                     }
+                 }
+
+
+
+                 return false;
+
+
+
+         } catch (Exception e) {
+         }
+
+
+        return false;
+
+
      }
 
 }

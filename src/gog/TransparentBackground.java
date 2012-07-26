@@ -41,10 +41,9 @@ public class TransparentBackground extends JComponent {
        
        g.setColor(Color.blue);
        g.drawRect(12,105,ImagePuller.IMG_WIDTH,ImagePuller.IMG_HEIGHT);
-       g.drawRect(103,30,24,12);
-      
 
-       g.drawRect(446,30,24,12);
+       g.drawRect(25,30,229,12);
+       g.drawRect(350,30,229,12);
        
    }
 
@@ -58,7 +57,7 @@ public class TransparentBackground extends JComponent {
    }
    public int gethpX(){
      java.awt.Point pos = this.getLocationOnScreen();
-     return pos.x+103;
+     return pos.x+25;
    }
    public int gethpY(){
      java.awt.Point pos = this.getLocationOnScreen();

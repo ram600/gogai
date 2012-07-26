@@ -13,7 +13,7 @@ import java.util.Iterator;
  *
  * @author admin
  */
-public class PointCollection {
+public class PointCollection implements Cloneable {
 
     
     private ArrayList<Point> collection = new ArrayList<Point>();
@@ -50,7 +50,7 @@ public class PointCollection {
        }
           
        
-       if(best_tnt.tnt < p.tnt){
+       if(best_tnt.tnt < p.tnt || (p.tnt == best_tnt.tnt && p.min < best_tnt.min)){
            best_tnt = p;
        }
     }
@@ -81,6 +81,18 @@ public class PointCollection {
         collection = new ArrayList<Point>();
     }
 
+    @Override
+    protected PointCollection clone() throws CloneNotSupportedException {
+        PointCollection pc = (PointCollection)super.clone();
+        pc.best_tnt = best_tnt.clone();
+        pc.best_bomb = best_bomb.clone();
+        pc.best_min = best_min.clone();
+        pc.best_max = best_max.clone();
+        pc.best_mod = best_mod.clone();
+        return pc;
+    }
 
+
+    
 
 }

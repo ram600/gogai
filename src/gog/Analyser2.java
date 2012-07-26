@@ -72,13 +72,14 @@ public class Analyser2 {
     }
 
     public void autoStep(){
-       // if(auto < 2){
+        if(auto > 1){
           ai.makeBlitz();
-      //  }else{
-       //   ai.makeStep();
-        //bombExits();
-       // }
-    
+        }else{
+          ai.makeStep2();
+          HorizontalAnalyse.points.clear();
+        
+        }
+            
 
     }
 

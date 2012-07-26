@@ -118,8 +118,6 @@ class Run {
         JLabel help = new JLabel(new ImageIcon(image));
         
 
-        
-
          b = new JButton("Задать координаты");
         b.setPreferredSize(new Dimension(200,50));
         
